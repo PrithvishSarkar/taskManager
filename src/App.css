@@ -1,12 +1,12 @@
 body {
     margin: 0;
     min-height: 100vh;
-    background-image: linear-gradient(30deg, #7f00ff 40%, #cf9fff 100%);
-    /* Voilet, Light Violet */
-    background-image: -o-linear-gradient(30deg, #7f00ff 40%, #cf9fff 100%);
-    background-image: -moz-linear-gradient(30deg, #7f00ff 40%, #cf9fff 100%);
-    background-image: -webkit-linear-gradient(30deg, #7f00ff 40%, #cf9fff 100%);
+    background-image: linear-gradient(30deg, #111, #333);
+    background-image: -o-linear-gradient(30deg, #111, #333);
+    background-image: -moz-linear-gradient(30deg, #111, #333);
+    background-image: -webkit-linear-gradient(30deg, #111, #333);
     background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .header {
@@ -22,11 +22,11 @@ body {
     font-family: 'Courier New', Courier, monospace;
     font-size: 3em;
     font-weight: bold;
-    font-stretch: expanded;
+    letter-spacing: 0.125em;
 }
 
 .introduction {
-    color: #c0c0c0; /* Silver */
+    color: #eee;
     animation-name: wiggle;
     -o-animation-name: wiggle;
     -moz-animation-name: wiggle;
@@ -56,29 +56,25 @@ body {
 @keyframes wiggle {
     0% {
         transform: scaleX(1);
+        text-shadow: 0 0 0.125em #0ff;
     }
     100% {
         transform: scaleX(0.8);
+        text-shadow: 0 0 0.125em #f00;
     }
 }
 
 .taskCount {
     border-style: dashed;
     border-width: 0.0625em;
-    border-color: #00008b; /* Dark Blue */
+    border-color: #ffa500; /* Orange */
     border-radius: 0.5em;
-    color: #00008b;
+    color: #ffa500;
     text-align: center;
     padding: 0.5em;
 }
 
 .inputForm {
-    border-bottom-style: inset;
-    border-bottom-width: 0.125em;
-    border-bottom-color: #7f00ff;
-    border-top-style: inset;
-    border-top-width: 0.125em;
-    border-top-color: #7f00ff;
     text-align: center;
     box-sizing: border-box;
 }
@@ -87,41 +83,55 @@ body {
     padding: 0.5em;
     margin: 1em;
     border: none;
-    background-color: #98fb98; /* Pale Green */
-    box-shadow: 0.125em 0.125em 0.125em #7f00ff;
+    background-color: #eee;
+    box-shadow: 0.0625em 0.0625em 0.125em #0ff;
     border-radius: 0.5em;
+    outline: none;
     font-size: 2em;
     font-family: Georgia, 'Times New Roman', Times, serif;
     text-align: center;
-    color: darkblue;
+    color: #000080; /* Navy */
     cursor: pointer;
 }
 
 .formInput {
     font-style: italic;
-    min-width: 50vw;
 }
 
 .formButton {
     font-weight: bold;
-    min-width: 20vw;
+}
+
+.formReset {
+    font-weight: 100;
+}
+
+.formButton:active, .formReset:active {
+    box-shadow: -0.0625em -0.0625em 0.125em #0ff;
 }
 
 .listItems {
     box-sizing: border-box;
-    border: none;
-    background-color: #7f00ff;
-    border-bottom-right-radius: 1em;
-    padding: 0.5em;
-    margin: 1em;
+    border-left-style: solid;
+    border-left-width: 0.125em;
+    border-left-color: #ffa500;
+    color: #ffa500;
+    margin: 1em auto;
     font-family: cursive;
     font-size: 1.5em;
-    font-stretch: expanded;
-    color: #ffef00; /* Canary Yellow */
 }
 
-.listCheckbox {
-    min-width: 2em;
+.listCheckBox {
+    margin: auto 0.5em;
+    padding: 0.25em;
+    outline: none;
+    border: none;
+    border-radius: 20%;
+    text-align: center;
+    font-size: 0.75em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #8b0000; /* Dark Red */
 }
 
 .listButton {
