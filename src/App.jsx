@@ -21,7 +21,7 @@ function Header({ toDoArray, count }) {
 }
 
 // Form Component for user(s) to input data
-function Form({ idValue, setData }) {
+function Form({ idValue, setData, setCount }) {
   const [input, setInput] = useState('');
   const handleClick = () => {
     if (input.trim() === '') {
@@ -36,6 +36,9 @@ function Form({ idValue, setData }) {
     );
     setInput('');
   };
+  const handleReset = () => {
+    setData([]); setCount(0);
+  };
   return (
     <form onSubmit={e => e.preventDefault()} className="inputForm">
       <input
@@ -49,23 +52,32 @@ function Form({ idValue, setData }) {
       <button type="submit" onClick={handleClick} className="form formButton">
         Add Tasks
       </button>
+      <button type="button" onClick={handleReset} className='form formReset'>
+        Delete All Tasks
+      </button>
     </form>
   );
 }
 
 // ListItem Component to decorate the list items
 function ListItem({ todo, onEditTask, onDeleteTask, setCount }) {
-  const handleCheckboxChange = (e) => {
-    if (e.target.checked) {
+  const handleCheckBoxClick = (e) => {
+    if (e.target.value === "✗") {
+      e.target.value = "✓";
+      e.target.textContent = "✓";
+      e.target.style.backgroundColor = "#006400"; // Dark Green
       todo.isCompleted = true;
       setTimeout(
-        () => alert("Congratulations!! \nYou have completed the task!"), 100
+        () => alert("Congratulations!! \nYou have completed the task!"),
+        100
       );
-      setCount(count => count + 1);
-    }
-    else {
+      setCount((count) => count + 1);
+    } else {
       todo.isCompleted = false;
-      setCount(count => count - 1);
+      e.target.value = "✗";
+      e.target.textContent = "✗";
+      e.target.style.backgroundColor = "#8b0000"; // Dark Red
+      setCount((count) => count - 1);
     }
   };
   const handleEditTask = () => {
@@ -77,19 +89,22 @@ function ListItem({ todo, onEditTask, onDeleteTask, setCount }) {
   const handleDeleteTask = () => {
     const confirmation = confirm("Do you really want to delete this task?");
     if (confirmation) {
-      if (!todo.isCompleted)
-        onDeleteTask(todo.id);
-      else alert("Task once done cannot be deleted!");
+      onDeleteTask(todo.id);
+      if (todo.isCompleted)
+        setCount(count => count - 1);
     }
     else alert("Task NOT Deleted!");
   };
   return (
     <li key={todo.id} className="listItems">
-      <input
-        type="checkbox"
-        onChange={handleCheckboxChange}
-        className="listCheckbox"
-      />
+      <button
+        type="button"
+        onClick={handleCheckBoxClick}
+        className="listCheckBox"
+        value="&#10007;"
+      >
+        &#10007;
+      </button>
       {todo.task}
       <button
         type="button"
@@ -147,7 +162,7 @@ export default function App() {
   return (
     <>
       <Header toDoArray={data} count={count} />
-      <Form idValue={dataLength} setData={setData} />
+      <Form idValue={dataLength} setData={setData} setCount={setCount} />
       <List todos={data} setToDo={setData} setCount={setCount} />
     </>
   );
