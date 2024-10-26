@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./tailwind.css";
 
 const ToDoHeader = ({ text, setText, onAdd }) => {
@@ -170,11 +170,24 @@ const ToDoLists = ({ toDoArray, onDelete, onEdit }) => {
 
 export default function App() {
   const [toDoTask, setToDoTask] = useState("");
-  const [toDoListArray, setToDoListArray] = useState([]);
+  
+  // I am fetching todo list data from the local storage if present
+  // For the 1st render: no data in local storage -> the list is set to an empty array
+  const [toDoListArray, setToDoListArray] = useState(() => {
+    const storedToDoListArray = window.localStorage.getItem("storedToDoList");
+    return storedToDoListArray ? JSON.parse(storedToDoListArray) : [];
+  });
+
+  // Side effect is used to store todo list array as a key-value pair in the local storage
+  useEffect(() => {
+    window.localStorage.setItem("storedToDoList", JSON.stringify(toDoListArray));
+  }, [toDoListArray]);
 
   const handleAddition = () => {
-    setToDoListArray((previousList) => [...previousList, toDoTask]);
-    setToDoTask("");
+    if (toDoTask !== "") {
+      setToDoListArray((previousList) => [...previousList, toDoTask]);
+      setToDoTask("");
+    }
   };
   const handleDelete = (id) => {
     setToDoListArray((previousList) =>
