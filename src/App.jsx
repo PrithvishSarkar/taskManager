@@ -1,169 +1,217 @@
-import './App.css';
-import { useState, useRef } from 'react';
+import { useState } from "react";
+import "./tailwind.css";
 
-// Header Component to track task completion
-function Header({ toDoArray, count }) {
-  if (count === toDoArray.length && toDoArray.length !== 0) {
-    setTimeout(
-      () => alert(`YaY!! \nYou have completed all ${count} tasks!`), 200
-    );
-  }
+const ToDoHeader = ({ text, setText, onAdd }) => {
   return (
-    <header className="header">
-      <section className="introduction">
-        Manage You Tasks <br /> Effectively!
+    <fieldset
+      className="border-2 border-sky-200
+    rounded-md
+    p-4"
+    >
+      <legend
+        className="px-2
+      font-sans
+      italic
+      text-sky-200 md:text-xl"
+      >
+        What's your plan for today?
+      </legend>
+      <section
+        className="flex flex-col md:flex-row
+      justify-around md:justify-center
+      items-center
+      gap-4"
+      >
+        <input
+          type="text"
+          placeholder="Enter Your ToDo"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          className="w-full md:w-auto
+          md:text-2xl
+          text-center
+          font-bold
+          p-2
+          text-sky-400
+          outline-0 outline-offset-0
+          rounded-md
+          border-2
+          border-sky-400
+          bg-transparent
+          focus:ring-2 focus:ring-sky-800
+          placeholder:text-sky-200"
+        />
+        <button
+          onClick={onAdd}
+          className="w-full md:w-auto
+          bg-emerald-200
+          text-emerald-900
+          font-bold
+          font-sans
+          p-2
+          rounded-md
+          md:text-2xl"
+        >
+          Add ToDo
+        </button>
       </section>
-      <section className="taskCount">
-        Completed: <br /> {count}/{toDoArray.length}
-      </section>
-    </header>
+    </fieldset>
   );
-}
+};
 
-// Form Component for user(s) to input data
-function Form({ idValue, setData, setCount }) {
-  const [input, setInput] = useState('');
-  const handleClick = () => {
-    if (input.trim() === '') {
-      alert("Task Cannot be Empty!!");
-      return;
-    }
-    setData(
-      previousData => [
-        ...previousData,
-        {id: idValue.current++, task: input, isCompleted: false}
-      ]
-    );
-    setInput('');
-  };
-  const handleReset = () => {
-    setData([]); setCount(0);
-  };
-  return (
-    <form onSubmit={e => e.preventDefault()} className="inputForm">
-      <input
-        type="text"
-        autoFocus={true}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Enter you tasks here.."
-        className="form formInput"
-      />
-      <button type="submit" onClick={handleClick} className="form formButton">
-        Add Tasks
-      </button>
-      <button type="button" onClick={handleReset} className='form formReset'>
-        Delete All Tasks
-      </button>
-    </form>
-  );
-}
+const ToDoList = ({ id, task, onDelete, onEdit }) => {
+  const [date, setDate] = useState(new Date());
+  const [taskDone, setTaskDone] = useState(false);
 
-// ListItem Component to decorate the list items
-function ListItem({ todo, onEditTask, onDeleteTask, setCount }) {
-  const handleCheckBoxClick = (e) => {
-    if (e.target.value === "✗") {
-      e.target.value = "✓";
-      e.target.textContent = "✓";
-      e.target.style.backgroundColor = "#006400"; // Dark Green
-      todo.isCompleted = true;
-      setTimeout(
-        () => alert("Congratulations!! \nYou have completed the task!"),
-        100
-      );
-      setCount((count) => count + 1);
-    } else {
-      todo.isCompleted = false;
-      e.target.value = "✗";
-      e.target.textContent = "✗";
-      e.target.style.backgroundColor = "#8b0000"; // Dark Red
-      setCount((count) => count - 1);
-    }
-  };
-  const handleEditTask = () => {
-    const newTask = prompt("Enter the Changed Task: ", todo.task);
-    if (newTask !== null && newTask.trim() !== '')
-      onEditTask(todo.id, newTask);
-    else alert("Invalid!!");
-  };
-  const handleDeleteTask = () => {
-    const confirmation = confirm("Do you really want to delete this task?");
-    if (confirmation) {
-      onDeleteTask(todo.id);
-      if (todo.isCompleted)
-        setCount(count => count - 1);
-    }
-    else alert("Task NOT Deleted!");
-  };
   return (
-    <li key={todo.id} className="listItems">
-      <button
-        type="button"
-        onClick={handleCheckBoxClick}
-        className="listCheckBox"
-        value="&#10007;"
+    <li
+      key={id}
+      className="flex flex-row
+      justify-between
+      items-center
+      p-2 mb-2
+      rounded-md
+      custom-list-background-image"
+    >
+      <div
+        data-type="main-content"
+        className="flex flex-row
+        justify-start
+        items-center
+        max-w-[70%] md:max-w-[85%]"
       >
-        &#10007;
-      </button>
-      {todo.task}
-      <button
-        type="button"
-        onClick={handleEditTask}
-        className="listButton"
-      >
-        Edit Task
-      </button>
-      <button
-        type="button"
-        onClick={handleDeleteTask}
-        className="listButton"
-      >
-        Delete Task
-      </button>
+        <button
+          onClick={() => setTaskDone(!taskDone)}
+          className={`p-1 mr-2
+            rounded-md
+            ${taskDone ? "bg-emerald-200" : "bg-rose-400"}`}
+        >
+          {taskDone ? "✔" : "❌"}
+        </button>
+        <span
+          className="flex flex-col
+        justify-center
+        items-start"
+        >
+          <span
+            data-type="todo-task"
+            className="text-base md:text-xl
+            text-indigo-950
+            font-serif
+            font-semibold
+            first-letter:capitalize"
+          >
+            {task}
+          </span>
+          <span
+            className="text-xs md:text-sm
+          text-indigo-950
+          font-mono
+          font-semibold"
+          >
+            {date.toLocaleTimeString()}
+          </span>
+          <span
+            className="text-xs md:text-sm
+          text-indigo-950
+          font-mono
+          font-semibold"
+          >
+            {date.toDateString()}
+          </span>
+        </span>
+      </div>
+
+      <div data-type="operation-button">
+        <button
+          onClick={() => onDelete(id)}
+          className="p-1
+          bg-indigo-950
+          text-sky-200
+          rounded-md
+          text-lg md:text-2xl"
+        >
+          &#128465;
+        </button>{" "}
+        {/* trashbin-delete */}
+        <button
+          onClick={() => {
+            onEdit(id);
+            setDate(new Date());
+          }}
+          className="p-1
+          bg-indigo-950
+          text-sky-200
+          rounded-md
+          text-lg md:text-2xl"
+        >
+          &#128393;
+        </button>{" "}
+        {/* pen-edit */}
+      </div>
     </li>
   );
-}
+};
 
-// To-Do-List Component to display all the added tasks
-function List({ todos, setToDo, setCount }) {
-  const handleEditTask = (id, newTask) => {
-    setToDo(
-      previousToDo => previousToDo.map(
-        todo => (todo.id === id) ? { ...todo, task: newTask } : todo
-      )
-    );
-  };
-  const handleDeleteTask = (id) => {
-    setToDo(
-      previousToDo => previousToDo.filter(todo => (todo.id !== id))
-    );
-  };
+const ToDoLists = ({ toDoArray, onDelete, onEdit }) => {
   return (
-    <ul style={{listStyleType: "none"}}>
-      {
-        todos.map(
-          todo => <ListItem
-            todo={todo}
-            onEditTask={handleEditTask}
-            onDeleteTask={handleDeleteTask}
-            setCount={setCount}
-          />
-        )
-      }
+    <ul className="mt-8 list-none">
+      {toDoArray.map((toDoItem, index) => (
+        <ToDoList
+          id={index}
+          task={toDoItem}
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
+      ))}
     </ul>
   );
-}
+};
 
-// App Component clubs all the required components
 export default function App() {
-  const [data, setData] = useState([]);
-  const [count, setCount] = useState(0);
-  const dataLength = useRef(data.length);
+  const [toDoTask, setToDoTask] = useState("");
+  const [toDoListArray, setToDoListArray] = useState([]);
+
+  const handleAddition = () => {
+    setToDoListArray((previousList) => [...previousList, toDoTask]);
+    setToDoTask("");
+  };
+  const handleDelete = (id) => {
+    setToDoListArray((previousList) =>
+      previousList.filter((_, index) => index !== id)
+    );
+  };
+  const handleEdit = (id) => {
+    const prompt = window.prompt(`Edit the task ${id + 1}`);
+    if (prompt !== null || undefined) {
+      setToDoListArray((previousList) =>
+        previousList.map((value, index) => {
+          if (index !== id) return value;
+          else return prompt;
+        })
+      );
+    }
+  };
+
   return (
-    <>
-      <Header toDoArray={data} count={count} />
-      <Form idValue={dataLength} setData={setData} setCount={setCount} />
-      <List todos={data} setToDo={setData} setCount={setCount} />
-    </>
+    <div
+      data-type="container"
+      className="max-w-[90vw]
+      mx-auto my-4 p-2
+      border-none
+      rounded-md
+      bg-indigo-950"
+    >
+      <ToDoHeader
+        text={toDoTask}
+        setText={setToDoTask}
+        onAdd={handleAddition}
+      />
+      <ToDoLists
+        toDoArray={toDoListArray}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+      />
+    </div>
   );
 }
