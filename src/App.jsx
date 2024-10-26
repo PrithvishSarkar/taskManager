@@ -59,10 +59,8 @@ const ToDoHeader = ({ text, setText, onAdd }) => {
   );
 };
 
-const ToDoList = ({ id, task, onDelete, onEdit }) => {
+const ToDoList = ({ id, taskObj, onDelete, onEdit, toggleCompletion }) => {
   const [date, setDate] = useState(new Date());
-  const [taskDone, setTaskDone] = useState(false);
-
   return (
     <li
       key={id}
@@ -81,12 +79,12 @@ const ToDoList = ({ id, task, onDelete, onEdit }) => {
         max-w-[70%] md:max-w-[85%]"
       >
         <button
-          onClick={() => setTaskDone(!taskDone)}
+          onClick={() => toggleCompletion(id)}
           className={`p-1 mr-2
             rounded-md
-            ${taskDone ? "bg-emerald-200" : "bg-rose-400"}`}
+            ${taskObj.done ? "bg-emerald-200" : "bg-rose-400"}`}
         >
-          {taskDone ? "✔" : "❌"}
+          {taskObj.done ? "✔" : "❌"}
         </button>
         <span
           className="flex flex-col
@@ -101,7 +99,7 @@ const ToDoList = ({ id, task, onDelete, onEdit }) => {
             font-semibold
             first-letter:capitalize"
           >
-            {task}
+            {taskObj.text}
           </span>
           <span
             className="text-xs md:text-sm
@@ -153,15 +151,16 @@ const ToDoList = ({ id, task, onDelete, onEdit }) => {
   );
 };
 
-const ToDoLists = ({ toDoArray, onDelete, onEdit }) => {
+const ToDoLists = ({ toDoArray, onDelete, onEdit, toggleCompletion }) => {
   return (
     <ul className="mt-8 list-none">
-      {toDoArray.map((toDoItem, index) => (
+      {toDoArray.map((toDoItemObj, index) => (
         <ToDoList
           id={index}
-          task={toDoItem}
+          taskObj={toDoItemObj}
           onDelete={onDelete}
           onEdit={onEdit}
+          toggleCompletion={toggleCompletion}
         />
       ))}
     </ul>
@@ -170,7 +169,7 @@ const ToDoLists = ({ toDoArray, onDelete, onEdit }) => {
 
 export default function App() {
   const [toDoTask, setToDoTask] = useState("");
-  
+
   // I am fetching todo list data from the local storage if present
   // For the 1st render: no data in local storage -> the list is set to an empty array
   const [toDoListArray, setToDoListArray] = useState(() => {
@@ -180,12 +179,18 @@ export default function App() {
 
   // Side effect is used to store todo list array as a key-value pair in the local storage
   useEffect(() => {
-    window.localStorage.setItem("storedToDoList", JSON.stringify(toDoListArray));
+    window.localStorage.setItem(
+      "storedToDoList",
+      JSON.stringify(toDoListArray)
+    );
   }, [toDoListArray]);
 
   const handleAddition = () => {
     if (toDoTask !== "") {
-      setToDoListArray((previousList) => [...previousList, toDoTask]);
+      setToDoListArray((previousList) => [
+        ...previousList,
+        { text: toDoTask, done: false },
+      ]);
       setToDoTask("");
     }
   };
@@ -200,10 +205,17 @@ export default function App() {
       setToDoListArray((previousList) =>
         previousList.map((value, index) => {
           if (index !== id) return value;
-          else return prompt;
+          else return { ...value, text: prompt };
         })
       );
     }
+  };
+
+  const handleToggleCompletion = (id) => {
+    setToDoListArray(previousList => previousList.map((value, index) => {
+      if (index !== id) return value;
+      return {...value, done: !value.done};
+    }));
   };
 
   return (
@@ -224,6 +236,7 @@ export default function App() {
         toDoArray={toDoListArray}
         onDelete={handleDelete}
         onEdit={handleEdit}
+        toggleCompletion={handleToggleCompletion}
       />
     </div>
   );
