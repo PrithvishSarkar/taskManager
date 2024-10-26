@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: #c7d2fe;
+}
+
+.custom-list-background-image {
+    background-image: linear-gradient(to right, #f59e0b, #fcd34d);
+}
