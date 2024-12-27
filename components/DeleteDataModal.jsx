@@ -1,5 +1,9 @@
 import "../src/tailwind.css";
 
+// This Modal will be displayed when the user clicks on "Delete All" button
+// This Modal asks for a confirmation before deletion
+// All the data from the Local Storage will be deleted permanently
+// updateShowDeleteDataModal -> State Setter Function to change the Boolean State Variable
 function DeleteDataModal({ updateShowDeleteDataModal }) {
   return (
     <section className="fixed top-0 left-0 bottom-0 right-0 bg-transparent backdrop-blur-md">

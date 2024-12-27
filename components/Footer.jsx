@@ -1,5 +1,6 @@
 import "../src/tailwind.css";
 
+// This footer contains my name for authenticity and patent
 function Footer() {
   return (
     <div

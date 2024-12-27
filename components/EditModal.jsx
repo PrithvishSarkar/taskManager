@@ -1,8 +1,16 @@
 import "../src/tailwind.css";
 import { useState } from "react";
 
+// This Modal will be displayed when the user clicks on "Pen" icon present in each task
+// updateShowEditModal -> State Setter Function to change the Boolean State Variable
+// updateToDoListArray -> State Setter Function to change the To-Do Array
+// ID -> same as index of the task list
 function EditModal({ updateShowEditModal, updateToDoListArray, ID }) {
+  // The 'text' State Variable stores the value of the input data
   const [text, setText] = useState("");
+
+  // This function runs when "Pen" icon is clicked
+  // This function updates the Task Info Array and closes the Modal
   const handleTaskEdit = () => {
     updateToDoListArray((previousArray) =>
       previousArray.map((item, index) => {
@@ -11,6 +19,7 @@ function EditModal({ updateShowEditModal, updateToDoListArray, ID }) {
     );
     updateShowEditModal({ show: false, index: -1 });
   };
+  
   return (
     <section className="fixed top-0 left-0 bottom-0 right-0 bg-indigo-950">
       <fieldset

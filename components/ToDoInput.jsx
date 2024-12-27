@@ -1,8 +1,36 @@
 import "../src/tailwind.css";
 import { useState } from "react";
 
-const ToDoInput = ({ onAdd, updateShowDeleteDataModal }) => {
+// This component takes in the Task Input
+// onAdd -> This Prop adds the valid typed task in the Task List
+// updateShowDeleteDataModal -> State Setter Function to show or hide the Delete Data Modal
+const ToDoInput = ({
+  updateShowDeleteDataModal,
+  updateShowAlertModal,
+  updateToDoListArray,
+}) => {
+  // The 'text' State Variable contains the value of the text input
   const [text, setText] = useState("");
+
+  // This function runs when the user clicks on 'Add Task' button
+  // It adds new task in the list
+  const handleAddition = () => {
+    if (text.trim() === "") {
+      updateShowAlertModal(true);
+      setTimeout(() => updateShowAlertModal(false), 3000);
+    } else {
+      updateToDoListArray((previousArray) => [
+        {
+          text: text,
+          done: false,
+          time: new Date().toLocaleTimeString(),
+          date: new Date().toDateString(),
+        },
+        ...previousArray,
+      ]);
+    }
+  };
+
   return (
     <fieldset className="border-2 border-sky-200 rounded-md p-4">
       <legend className="px-2 font-sans italic text-sky-200 md:text-xl">
@@ -22,10 +50,7 @@ const ToDoInput = ({ onAdd, updateShowDeleteDataModal }) => {
           focus:ring-2 focus:ring-sky-800"
         />
         <button
-          onClick={() => {
-            onAdd(text);
-            setText("");
-          }}
+          onClick={handleAddition}
           className="w-full md:w-auto p-2 rounded-md
           bg-emerald-200 text-emerald-900 font-bold font-sans md:text-2xl"
         >

@@ -1,5 +1,10 @@
 import "../src/tailwind.css";
 
+// This component represents each of the task in the list
+// toDoItem -> This corresponds to an element in the To-Do Array
+// onTaskToggle -> This Prop toggles the value of 'done' to either 'true' or 'false'
+// onDelete -> This Prop deletes that particular task
+// onEdit -> This Prop opens an Edit Modal to edit that particular task text
 function SingleTask({ toDoItem, onTaskToggle, onDelete, onEdit }) {
   return (
     <section
