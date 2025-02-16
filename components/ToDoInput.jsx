@@ -28,6 +28,7 @@ const ToDoInput = ({
         },
         ...previousArray,
       ]);
+      setText("");
     }
   };
 
